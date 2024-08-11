@@ -1,7 +1,11 @@
 const express = require('express');
 const puppeteer = require('puppeteer');
+const cors = require('cors');
+const bodyParser = require('body-parser');
 
 const app = express();
+app.use(cors()); // Enable CORS for all routes
+app.use(bodyParser.json());
 
 async function getPlayerName(playerId) {
     const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] ,browserType: 'firefox'});
