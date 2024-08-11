@@ -60,7 +60,7 @@ app.get('/api/:playerId', async (req, res) => {
   }
 });
 
-app.get("/api", async (req, res) => {
+app.get("/apii", async (req, res) => {
   let options = {};
 
   if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
