@@ -28,7 +28,7 @@ async function getPlayerName(playerId) {
       await browser.close();
     }
   }
-app.get('/player-name/:playerId', async (req, res) => {
+app.get('/api/:playerId', async (req, res) => {
   const playerId = req.params.playerId;
   const playerName = await getPlayerName(playerId);
 
@@ -38,5 +38,6 @@ app.get('/player-name/:playerId', async (req, res) => {
     res.status(500).json({ error: 'Failed to retrieve player name' });
   }
 });
-
-module.exports = app;
+app.listen(3000, () => {
+  console.log('Server running on port 3000');
+});
