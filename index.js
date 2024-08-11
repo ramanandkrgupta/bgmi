@@ -43,7 +43,7 @@ app.post('/getGameId/', async (req, res) => {
 
 // 2 Endpoint to handle the API request
 app.get('/getGameId/:gameid', async (req, res) => {
-    const { gameid } = req.body; // Only gameid is dynamic
+    const { gameid } = req.query.gameid; // Only gameid is dynamic
 
     if (!gameid) {
         return res.status(400).send('Missing required parameter: gameid');
