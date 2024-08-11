@@ -1,100 +1,45 @@
-const app = require("express")();
+const express = require('express');
+const axios = require('axios');
+const bodyParser = require('body-parser');
 
-let chrome = {};
-let puppeteer;
+const app = express();
+const port = 3000;
 
-if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-  chrome = require("chrome-aws-lambda");
-  puppeteer = require("puppeteer-core");
-} else {
-  puppeteer = require("puppeteer");
-}
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
-async function getPlayerName(playerId) {
-  let options = {};
+// Endpoint to handle the API request
+app.post('/getGameId', async (req, res) => {
+    const { gameid } = req.body; // Only gameid is dynamic
 
-  if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-    options = {
-      args: [...chrome.args, "--hide-scrollbars", "--disable-web-security"],
-      defaultViewport: chrome.defaultViewport,
-      executablePath: await chrome.executablePath,
-      headless: true,
-      ignoreHTTPSErrors: true,
-    };
-  }
-    // const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] ,browserType: 'firefox'});
-    // const page = await browser.newPage();
-  
-    try {
-      let browser = await puppeteer.launch(options);
-
-    let page = await browser.newPage();
-      await page.goto('https://grabinstantuc.com');
-  
-      await page.type('#player_id', playerId);
-      await page.click('.btn_verify');
-  
-      await page.waitForFunction('document.querySelector(".show_name").textContent.trim() !== "Loading Please Wait..."');
-  
-      const playerName = await page.evaluate(() => {
-        const element = document.querySelector('.show_name');
-        return element.textContent.trim().replace('Player Name: ', '');
-      });
-  
-      return playerName;
-    } catch (error) {
-      console.error('Error retrieving player name:', error);
-      return null;
-    } finally {
-      await browser.close();
+    if (!gameid) {
+        return res.status(400).send('Missing required parameter: gameid');
     }
-  }
-app.get('/api/:playerId', async (req, res) => {
-  const playerId = req.params.playerId;
-  const playerName = await getPlayerName(playerId);
 
-  if (playerName) {
-    res.json({ playerName });
-  } else {
-    res.status(500).json({ error: 'Failed to retrieve player name' });
-  }
-});
-
-app.get("/apii", async (req, res) => {
-  let options = {};
-
-  if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-    options = {
-      args: [...chrome.args, "--hide-scrollbars", "--disable-web-security"],
-      defaultViewport: chrome.defaultViewport,
-      executablePath: await chrome.executablePath,
-      headless: true,
-      ignoreHTTPSErrors: true,
+    const config = {
+        method: 'post',
+        url: 'https://getquickservice.app/WebServiceModule/getGameId',
+        headers: { 
+            'Accept': '*/*',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Connection': 'keep-alive',
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            'Origin': 'https://grabinstantuc.com',
+            'Referer': 'https://grabinstantuc.com/',
+            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1'
+        },
+        data: `gameid=${encodeURIComponent(gameid)}&forGame=Bgmi&device_id=Mozilla%2F5.0+(iPhone%3B+CPU+iPhone+OS+16_6+like+Mac+OS+X)+AppleWebKit%2F605.1.15+(KHTML%2C+like+Gecko)+Version%2F16.6+Mobile%2F15E148+Safari%2F604.1430932`
     };
-  }
 
-  try {
-    let browser = await puppeteer.launch(options);
-
-    let page = await browser.newPage();
-    await page.goto("https://www.google.com");
-    res.send(await page.title());
-  } catch (err) {
-    console.error(err);
-    return null;
-  }
+    try {
+        const response = await axios(config);
+        res.json(response.data);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('An error occurred while fetching the game ID');
+    }
 });
 
-
-
-app.get("/", async (req, res) => {
-res.send("Hello");
-}
-
-
-
-app.listen(3000, () => {
-  console.log('Server running on port 3000');
+app.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}`);
 });
-
-module.exports = app;
