@@ -8,7 +8,7 @@
         "build": "npx puppeteer browsers install chrome && node index.js"
       }
       }
-    }
+    
   ],
   "routes": [
     {
