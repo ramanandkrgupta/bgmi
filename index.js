@@ -28,7 +28,7 @@ app.post('/getGameId/', async (req, res) => {
       'Referer': 'https://grabinstantuc.com/',
       'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1'
     },
-    data: `gameid=${encodeURIComponent(gameid)}&forGame=Bgmi&device_id=Mozilla%2F5.0+(iPhone%3B+CPU+iPhone+OS+16_6+like+Mac+OS+X)+AppleWebKit%2F605.1.15+(KHTML%2C+like+Gecko)+Version%2F16.6+Mobile[...]
+    data: `gameid=${encodeURIComponent(gameid)}&forGame=Bgmi&device_id=Mozilla%2F5.0+(iPhone%3B+CPU+iPhone+OS+16_6+like+Mac+OS+X)+AppleWebKit%2F605.1.15+(KHTML%2C+like+Gecko)+Version%2F16.6+Mobile[...]`
   };
 
   try {
