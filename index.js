@@ -30,14 +30,14 @@ app.post('/getGameId/', async (req, res) => {
       'Referer': 'https://grabinstantuc.com/',
       'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1'
     },
-    data: `gameid=${encodeURIComponent(gameid)}&forGame=Bgmi&device_id=Mozilla%2F5.0+(iPhone%3B+CPU+iPhone+OS+16_6+like+Mac+OS+X)+AppleWebKit%2F605.1.15+(KHTML%2C+like+Gecko)+Version%2F16.6+Mobile[...[...]
+    data: `gameid=${encodeURIComponent(gameid)}&forGame=Bgmi&device_id=Mozilla%2F5.0+(iPhone%3B+CPU+iPhone+OS+16_6+like+Mac+OS+X)+AppleWebKit%2F605.1.15+(KHTML%2C+like+Gecko)+Version%2F16.6+Mobile`
   };
 
   try {
     const response = await axios(config);
     res.json(response.data);
   } catch (error) {
-    console.error(error);
+    console.error(error.message, error.stack);
     res.status(500).send('An error occurred while fetching the game ID');
   }
 });
@@ -62,14 +62,14 @@ app.get('/getGameId', async (req, res) => {
       'Referer': 'https://grabinstantuc.com/',
       'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1'
     },
-    data: `gameid=${encodeURIComponent(gameid)}&forGame=Bgmi&device_id=Mozilla%2F5.0+(iPhone%3B+CPU+iPhone+OS+16_6+like+Mac+OS+X)+AppleWebKit%2F605.1.15+(KHTML%2C+like+Gecko)+Version%2F16.6+Mobile[...[...]
+    data: `gameid=${encodeURIComponent(gameid)}&forGame=Bgmi&device_id=Mozilla%2F5.0+(iPhone%3B+CPU+iPhone+OS+16_6+like+Mac+OS+X)+AppleWebKit%2F605.1.15+(KHTML%2C+like+Gecko)+Version%2F16.6+Mobile`
   };
 
   try {
     const response = await axios(config);
     res.json(response.data);
   } catch (error) {
-    console.error(error);
+    console.error(error.message, error.stack);
     res.status(500).send('An error occurred while fetching the game ID');
   }
 });
@@ -110,7 +110,7 @@ app.post('/create-order', async (req, res) => {
     const response = await axios.request(config);
     res.json(response.data);
   } catch (error) {
-    console.error(error);
+    console.error(error.message, error.stack);
     res.status(500).send('An error occurred while creating the order');
   }
 });
